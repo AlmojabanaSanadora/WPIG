@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: #0f0f0f;
+            color: #fff;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #4a9eff;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            height: 100vh;
+            margin-top: 60px;
+            margin-bottom: 80px;
+        }
+
+        /* Panel Styles */
+        .panel {
+            position: relative;
+            height: calc(100vh - 140px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel:last-child {
+            border-right: none;
+        }
+
+        /* Default widths */
+        .panel {
+            flex: 0 0 80px;
+        }
+
+        .panel:hover:not(.active) {
+            flex: 0 0 400px;
+        }
+
+        .panel.active {
+            flex: 1;
+            cursor: default;
+        }
+
+        /* Panel Background Overlays */
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(138, 43, 226, 0.1));
+            opacity: 0;
+            transition: opacity 0.6s;
+        }
+
+        .panel:hover::before {
+            opacity: 1;
+        }
+
+        .panel.active::before {
+            opacity: 0.3;
+        }
+
+        /* Panel Titles (vertical) */
+        .panel-title {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            transition: all 0.6s;
+            pointer-events: none;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .panel:hover .panel-title {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 24px;
+        }
+
+        .panel.active .panel-title {
+            opacity: 0;
+            transform: translate(-50%, -50%) rotate(-90deg) scale(0.8);
+        }
+
+        /* Panel Content */
+        .panel-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 40px;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            pointer-events: none;
+        }
+
+        .panel.active .panel-content {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        /* Custom Scrollbar */
+        .panel-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: rgba(74, 158, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        /* Close Button */
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel.active .close-btn {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #4a9eff;
+            transform: rotate(90deg);
+        }
+
+        /* Color Coding for Panels */
+        .panel.contact { background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); }
+        .panel.main { background: linear-gradient(180deg, #0f3460 0%, #16213e 100%); }
+        .panel.section1 { background: linear-gradient(180deg, #533483 0%, #2d1b4e 100%); }
+        .panel.section2 { background: linear-gradient(180deg, #1e3a5f 0%, #2d1b4e 100%); }
+        .panel.section3 { background: linear-gradient(180deg, #2c5f2d 0%, #1b3a1b 100%); }
+        .panel.cvs { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 100%); }
+
+        /* Content Styling */
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: #4a9eff;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #6cb4ff;
+        }
+
+        h3 {
+            font-size: 22px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #8cc5ff;
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .contact-form {
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6cb4ff;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            padding: 12px 30px;
+            background: #4a9eff;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #3a8ee6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 158, 255, 0.4);
+        }
+
+        .cv-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cv-section {
+            margin-bottom: 20px;
+        }
+
+        .cv-section strong {
+            color: #6cb4ff;
+        }
+
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4a9eff;
+        }
+
+        .footer-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <ul class="nav-links">
+            <li><a onclick="openPanel('contact')">Contact</a></li>
+            <li><a onclick="openPanel('main')">Home</a></li>
+            <li><a onclick="openPanel('section1')">Section 1</a></li>
+            <li><a onclick="openPanel('section2')">Section 2</a></li>
+            <li><a onclick="openPanel('section3')">Section 3</a></li>
+            <li><a onclick="openPanel('cvs')">CVs</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Container with Panels -->
+    <div class="container">
+        <!-- Contact Panel -->
+        <div class="panel contact" id="contact" onclick="openPanel('contact')">
+            <div class="panel-title">Contact</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Get In Touch</h1>
+                <p>Have a question or want to work together? Feel free to reach out!</p>
+                
+                <form class="contact-form" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="Your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Your message..." required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="panel main active" id="main" onclick="openPanel('main')">
+            <div class="panel-title">Home</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Welcome to Our Project</h1>
+                <p>This is a collaborative project showcasing our work and expertise. Navigate through different sections to learn more about what we do and who we are.</p>
+                
+                <h2>About This Project</h2>
+                <p>This website demonstrates our technical skills and project capabilities. Each section contains detailed information about different aspects of our work.</p>
+                
+                <h2>Quick Navigation</h2>
+                <p>Use the top navigation bar or hover over the vertical panels to explore different sections. Click on any panel to expand it and view its full content.</p>
+                
+                <h2>What You'll Find Here</h2>
+                <p><strong>Contact:</strong> Reach out to us through our contact form</p>
+                <p><strong>Sections 1-3:</strong> Detailed information about different project units</p>
+                <p><strong>CVs:</strong> Professional profiles of our team members</p>
+            </div>
+        </div>
+
+        <!-- Section 1 Panel -->
+        <div class="panel section1" id="section1" onclick="openPanel('section1')">
+            <div class="panel-title">Section 1</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Section 1</h1>
+                <p>This is the first content unit of our project.</p>
+                
+                <h2>Overview</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+                
+                <h2>Key Features</h2>
+                <p>• Feature one with detailed description</p>
+                <p>• Feature two explaining important aspects</p>
+                <p>• Feature three highlighting capabilities</p>
+                
+                <h2>Technical Details</h2>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+
+        <!-- Section 2 Panel -->
+        <div class="panel section2" id="section2" onclick="openPanel('section2')">
+            <div class="panel-title">Section 2</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Section 2</h1>
+                <p>This is the second content unit of our project.</p>
+                
+                <h2>Description</h2>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
+                
+                <h2>Components</h2>
+                <p>• Component A: Essential functionality</p>
+                <p>• Component B: Advanced features</p>
+                <p>• Component C: Integration capabilities</p>
+                
+                <h2>Implementation</h2>
+                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+            </div>
+        </div>
+
+        <!-- Section 3 Panel -->
+        <div class="panel section3" id="section3" onclick="openPanel('section3')">
+            <div class="panel-title">Section 3</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Section 3</h1>
+                <p>This is the third content unit of our project.</p>
+                
+                <h2>Introduction</h2>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi.</p>
+                
+                <h2>Highlights</h2>
+                <p>• Innovation in design and implementation</p>
+                <p>• User-focused development approach</p>
+                <p>• Scalable and maintainable architecture</p>
+                
+                <h2>Results</h2>
+                <p>Sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est.</p>
+            </div>
+        </div>
+
+        <!-- CVs Panel -->
+        <div class="panel cvs" id="cvs" onclick="openPanel('cvs')">
+            <div class="panel-title">CVs</div>
+            <div class="close-btn" onclick="closePanel(event)">×</div>
+            <div class="panel-content">
+                <h1>Our Team</h1>
+                
+                <div class="cv-card">
+                    <h2>Team Member 1</h2>
+                    <div class="cv-section">
+                        <h3>Professional Summary</h3>
+                        <p>Experienced developer with expertise in web technologies and project management. Passionate about creating intuitive and efficient solutions.</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Skills</h3>
+                        <p><strong>Technical:</strong> HTML, CSS, JavaScript, React, Node.js, Python</p>
+                        <p><strong>Design:</strong> UI/UX, Responsive Design, Accessibility</p>
+                        <p><strong>Tools:</strong> Git, VS Code, Figma, Adobe Creative Suite</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Experience</h3>
+                        <p><strong>Senior Developer</strong> - Company Name (2020-Present)</p>
+                        <p>Leading development of web applications and mentoring junior developers.</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Education</h3>
+                        <p><strong>Computer Science Degree</strong> - University Name</p>
+                    </div>
+                </div>
+
+                <div class="cv-card">
+                    <h2>Team Member 2</h2>
+                    <div class="cv-section">
+                        <h3>Professional Summary</h3>
+                        <p>Creative problem solver with strong technical background and dedication to delivering high-quality results. Focused on innovative solutions and user experience.</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Skills</h3>
+                        <p><strong>Technical:</strong> JavaScript, TypeScript, Vue.js, Angular, SQL</p>
+                        <p><strong>Design:</strong> Wireframing, Prototyping, User Research</p>
+                        <p><strong>Tools:</strong> Docker, Jenkins, Jira, Sketch</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Experience</h3>
+                        <p><strong>Full Stack Developer</strong> - Tech Company (2019-Present)</p>
+                        <p>Building scalable applications and implementing best practices.</p>
+                    </div>
+                    <div class="cv-section">
+                        <h3>Education</h3>
+                        <p><strong>Software Engineering Degree</strong> - University Name</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+        </div>
+        <div class="footer-info">
+            © 2025 Project Team. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        function openPanel(panelId) {
+            // Remove active class from all panels
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Add active class to clicked panel
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        function closePanel(event) {
+            event.stopPropagation();
+            // Set main panel as active when closing
+            openPanel('main');
+        }
+
+        function handleSubmit(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = {
+            name: form.elements[0].value,
+            email: form.elements[1].value,
+            message: form.elements[2].value
+        };
+        
+        // Replace with YOUR Google Apps Script URL
+        const scriptURL = 'YOUR_SCRIPT_URL_HERE';
+        
+        fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            alert('Thank you for your message! We will get back to you soon.');
+            form.reset();
+        })
+        .catch(error => {
+            alert('Error sending message. Please try again.');
+            console.error('Error:', error);
+        });
+         }
+    </script>
+</body>
+</html>
