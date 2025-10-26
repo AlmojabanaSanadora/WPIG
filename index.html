@@ -3,88 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio project showcasing our work and expertise">
     <title>Portfolio Project</title>
     <style>
+        /* ==========================================================================
+           CSS CUSTOM PROPERTIES
+           ========================================================================== */
+        :root {
+            /* Colors */
+            --color-primary: #4a9eff;
+            --color-primary-light: #6cb4ff;
+            --color-primary-lighter: #8cc5ff;
+            --color-primary-dark: #3a8ee6;
+            
+            /* Backgrounds */
+            --color-bg-dark: #0f0f0f;
+            --color-bg-panel: rgba(20, 20, 20, 0.95);
+            --color-bg-overlay: rgba(255, 255, 255, 0.05);
+            --color-bg-overlay-hover: rgba(255, 255, 255, 0.08);
+            
+            /* Text */
+            --color-text-primary: #fff;
+            --color-text-secondary: rgba(255, 255, 255, 0.85);
+            --color-text-muted: rgba(255, 255, 255, 0.6);
+            
+            /* Layout */
+            --nav-height: 60px;
+            --footer-height: 80px;
+            --panel-collapsed: 80px;
+            --panel-hover: 400px;
+            
+            /* Spacing */
+            --spacing-sm: 8px;
+            --spacing-md: 15px;
+            --spacing-lg: 30px;
+            --spacing-xl: 40px;
+            
+            /* Transitions */
+            --transition-fast: 0.3s;
+            --transition-medium: 0.6s;
+            --transition-cubic: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           BASE STYLES
+           ========================================================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
-            background: #0f0f0f;
-            color: #fff;
+            background: var(--color-bg-dark);
+            color: var(--color-text-primary);
+            line-height: 1.6;
         }
 
-        /* Top Navigation Bar */
+        /* Skip to main content for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 10001;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ==========================================================================
+           TOP NAVIGATION BAR
+           ========================================================================== */
         .top-nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: rgba(20, 20, 20, 0.95);
+            height: var(--nav-height);
+            background: var(--color-bg-panel);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            padding: 0 30px;
+            padding: 0 var(--spacing-lg);
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: var(--spacing-lg);
             list-style: none;
+            margin: 0;
         }
 
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
+        .nav-links button {
+            background: none;
+            border: none;
+            color: var(--color-text-primary);
             font-size: 14px;
             font-weight: 500;
-            transition: color 0.3s;
+            padding: var(--spacing-sm) var(--spacing-md);
             cursor: pointer;
+            transition: color var(--transition-fast);
+            font-family: inherit;
         }
 
-        .nav-links a:hover {
-            color: #4a9eff;
+        .nav-links button:hover,
+        .nav-links button:focus {
+            color: var(--color-primary);
         }
 
-        /* Main Container */
+        /* ==========================================================================
+           MAIN CONTAINER
+           ========================================================================== */
         .container {
             display: flex;
-            height: calc(100vh - 140px);
-            margin-top: 60px;
-            margin-bottom: 80px;
+            min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+            margin-top: var(--nav-height);
+            margin-bottom: var(--footer-height);
         }
 
-        /* Panel Styles */
+        /* ==========================================================================
+           PANEL STYLES
+           ========================================================================== */
         .panel {
             position: relative;
-            height: calc(100vh - 140px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+            transition: all var(--transition-medium) var(--transition-cubic);
             cursor: pointer;
             overflow: hidden;
             border-right: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 0 0 var(--panel-collapsed);
         }
 
         .panel:last-child {
             border-right: none;
         }
 
-        /* Default widths */
-        .panel {
-            flex: 0 0 80px;
+        .panel:hover:not(.panel--active) {
+            flex: 0 0 var(--panel-hover);
         }
 
-        .panel:hover:not(.active) {
-            flex: 0 0 400px;
-        }
-
-        .panel.active {
+        .panel.panel--active {
             flex: 1;
             cursor: default;
         }
@@ -99,19 +176,20 @@
             bottom: 0;
             background: linear-gradient(135deg, rgba(74, 158, 255, 0.1), rgba(138, 43, 226, 0.1));
             opacity: 0;
-            transition: opacity 0.6s;
+            transition: opacity var(--transition-medium);
+            pointer-events: none;
         }
 
-        .panel:hover:not(.active)::before {
+        .panel:hover:not(.panel--active)::before {
             opacity: 0.5;
         }
 
-        .panel.active::before {
+        .panel.panel--active::before {
             opacity: 0.3;
         }
 
         /* Panel Titles (vertical) */
-        .panel-title {
+        .panel__title {
             position: absolute;
             left: 50%;
             top: 50%;
@@ -121,99 +199,109 @@
             letter-spacing: 3px;
             white-space: nowrap;
             text-transform: uppercase;
-            transition: all 0.6s;
+            transition: all var(--transition-medium);
             pointer-events: none;
             color: rgba(255, 255, 255, 0.7);
         }
 
-        .panel:hover:not(.active) .panel-title {
-            opacity: 0;
-            transform: translate(-50%, -50%) rotate(-90deg) scale(0.8);
-        }
-
-        .panel.active .panel-title {
+        .panel:hover:not(.panel--active) .panel__title,
+        .panel.panel--active .panel__title {
             opacity: 0;
             transform: translate(-50%, -50%) rotate(-90deg) scale(0.8);
         }
 
         /* Panel Content */
-        .panel-content {
+        .panel__content {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            padding: 40px;
+            padding: var(--spacing-xl);
             opacity: 0;
             transform: translateX(-30px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-medium) var(--transition-cubic);
             overflow-y: auto;
             pointer-events: none;
         }
 
-        .panel:hover:not(.active) .panel-content {
+        .panel:hover:not(.panel--active) .panel__content {
             opacity: 0.6;
             transform: translateX(0);
             pointer-events: none;
         }
 
-        .panel.active .panel-content {
+        .panel.panel--active .panel__content {
             opacity: 1;
             transform: translateX(0);
             pointer-events: all;
         }
 
         /* Custom Scrollbar */
-        .panel-content::-webkit-scrollbar {
+        .panel__content::-webkit-scrollbar {
             width: 8px;
         }
 
-        .panel-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+        .panel__content::-webkit-scrollbar-track {
+            background: var(--color-bg-overlay);
         }
 
-        .panel-content::-webkit-scrollbar-thumb {
+        .panel__content::-webkit-scrollbar-thumb {
             background: rgba(74, 158, 255, 0.5);
             border-radius: 4px;
         }
 
-
+        .panel__content::-webkit-scrollbar-thumb:hover {
+            background: rgba(74, 158, 255, 0.7);
+        }
 
         /* Color Coding for Panels */
-        .panel.contact { background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); }
-        .panel.main { background: linear-gradient(180deg, #0f3460 0%, #16213e 100%); }
-        .panel.section1 { background: linear-gradient(180deg, #533483 0%, #2d1b4e 100%); }
-        .panel.section2 { background: linear-gradient(180deg, #1e3a5f 0%, #2d1b4e 100%); }
-        .panel.section3 { background: linear-gradient(180deg, #2c5f2d 0%, #1b3a1b 100%); }
-        .panel.cvs { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 100%); }
+        .panel--contact { background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); }
+        .panel--main { background: linear-gradient(180deg, #0f3460 0%, #16213e 100%); }
+        .panel--section1 { background: linear-gradient(180deg, #533483 0%, #2d1b4e 100%); }
+        .panel--section2 { background: linear-gradient(180deg, #1e3a5f 0%, #2d1b4e 100%); }
+        .panel--section3 { background: linear-gradient(180deg, #2c5f2d 0%, #1b3a1b 100%); }
+        .panel--cvs { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 100%); }
 
-        /* Content Styling */
+        /* ==========================================================================
+           TYPOGRAPHY
+           ========================================================================== */
         h1 {
             font-size: 42px;
             margin-bottom: 20px;
-            color: #4a9eff;
+            color: var(--color-primary);
+            line-height: 1.2;
         }
 
         h2 {
             font-size: 28px;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: #6cb4ff;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary-light);
+            line-height: 1.3;
         }
 
         h3 {
             font-size: 22px;
             margin-top: 20px;
             margin-bottom: 10px;
-            color: #8cc5ff;
+            color: var(--color-primary-lighter);
+            line-height: 1.4;
         }
 
         p {
             line-height: 1.8;
-            margin-bottom: 15px;
-            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text-secondary);
         }
 
+        strong {
+            color: var(--color-primary-light);
+        }
+
+        /* ==========================================================================
+           FORM STYLES
+           ========================================================================== */
         .contact-form {
             max-width: 500px;
         }
@@ -222,83 +310,134 @@
             margin-bottom: 20px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #6cb4ff;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-primary-light);
             font-weight: 500;
         }
 
-        input, textarea {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--color-bg-overlay);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-text-primary);
             font-size: 14px;
-            transition: all 0.3s;
+            font-family: inherit;
+            transition: all var(--transition-fast);
         }
 
-        input:focus, textarea:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
-            border-color: #4a9eff;
-            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--color-primary);
+            background: var(--color-bg-overlay-hover);
         }
 
-        textarea {
+        .form-group textarea {
             resize: vertical;
             min-height: 120px;
         }
 
-        button {
+        /* Button Styles */
+        .btn-primary {
             padding: 12px 30px;
-            background: #4a9eff;
+            background: var(--color-primary);
             border: none;
             border-radius: 6px;
-            color: #fff;
+            color: var(--color-text-primary);
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        button:hover {
-            background: #3a8ee6;
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(74, 158, 255, 0.4);
         }
 
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Form validation feedback */
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: #f5576c;
+        }
+
+        .form-group .error-message {
+            color: #f5576c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* ==========================================================================
+           CV CARD STYLES
+           ========================================================================== */
         .cv-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--color-bg-overlay);
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform var(--transition-fast);
+        }
+
+        .cv-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(74, 158, 255, 0.3);
         }
 
         .cv-section {
             margin-bottom: 20px;
         }
 
-        .cv-section strong {
-            color: #6cb4ff;
-        }
-
-        /* Footer */
+        /* ==========================================================================
+           FOOTER
+           ========================================================================== */
         footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 80px;
-            background: rgba(20, 20, 20, 0.95);
+            height: var(--footer-height);
+            background: var(--color-bg-panel);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
+            padding: 0 var(--spacing-xl);
             z-index: 1000;
         }
 
@@ -308,25 +447,28 @@
         }
 
         .footer-links a {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--color-text-muted);
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.3s;
+            transition: color var(--transition-fast);
         }
 
-        .footer-links a:hover {
-            color: #4a9eff;
+        .footer-links a:hover,
+        .footer-links a:focus {
+            color: var(--color-primary);
         }
 
         .footer-info {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--color-text-muted);
             font-size: 14px;
         }
 
-        /* Toast Notification */
+        /* ==========================================================================
+           TOAST NOTIFICATION
+           ========================================================================== */
         .toast {
             position: fixed;
-            top: 100px;
+            top: calc(var(--nav-height) + 20px);
             right: 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -337,48 +479,49 @@
             opacity: 0;
             transform: translateX(400px);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex;
+            display: none;
             align-items: center;
             gap: 15px;
             min-width: 300px;
             max-width: 400px;
         }
 
-        .toast.show {
+        .toast.toast--show {
             opacity: 1;
             transform: translateX(0);
+            display: flex;
         }
 
-        .toast.success {
+        .toast.toast--success {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
-        .toast.error {
+        .toast.toast--error {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
-        .toast-icon {
+        .toast__icon {
             font-size: 28px;
             flex-shrink: 0;
         }
 
-        .toast-content {
+        .toast__content {
             flex: 1;
         }
 
-        .toast-title {
+        .toast__title {
             font-weight: 700;
             font-size: 16px;
             margin-bottom: 4px;
         }
 
-        .toast-message {
+        .toast__message {
             font-size: 14px;
             opacity: 0.9;
             line-height: 1.4;
         }
 
-        .toast-close {
+        .toast__close {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
@@ -390,60 +533,255 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            transition: all var(--transition-fast);
             flex-shrink: 0;
+            padding: 0;
         }
 
-        .toast-close:hover {
+        .toast__close:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: rotate(90deg);
+        }
+
+        /* ==========================================================================
+           RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .panel:hover:not(.panel--active) {
+                flex: 0 0 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --nav-height: 50px;
+                --footer-height: auto;
+                --spacing-lg: 20px;
+                --spacing-xl: 25px;
+            }
+
+            .container {
+                flex-direction: column;
+                margin-bottom: 120px;
+            }
+
+            .panel {
+                min-height: 80px;
+                height: auto;
+                flex: 0 0 auto !important;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .panel:hover:not(.panel--active) {
+                flex: 0 0 auto !important;
+            }
+
+            .panel.panel--active {
+                min-height: 60vh;
+            }
+
+            .panel__title {
+                position: relative;
+                transform: none;
+                left: auto;
+                top: auto;
+                padding: 20px;
+                font-size: 18px;
+            }
+
+            .panel:not(.panel--active) .panel__title {
+                opacity: 1;
+                transform: none;
+            }
+
+            .panel.panel--active .panel__title {
+                display: none;
+            }
+
+            .panel__content {
+                position: relative;
+                padding: 20px;
+            }
+
+            .panel:hover:not(.panel--active) .panel__content {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            .top-nav {
+                padding: 0 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .nav-links button {
+                font-size: 13px;
+                padding: 6px 10px;
+            }
+
+            footer {
+                position: relative;
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .toast {
+                right: 15px;
+                left: 15px;
+                min-width: auto;
+                top: calc(var(--nav-height) + 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links button {
+                font-size: 12px;
+                padding: 5px 8px;
+            }
+
+            .contact-form {
+                max-width: 100%;
+            }
+        }
+
+        /* ==========================================================================
+           ACCESSIBILITY - REDUCED MOTION
+           ========================================================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ==========================================================================
+           PRINT STYLES
+           ========================================================================== */
+        @media print {
+            .top-nav,
+            footer,
+            .skip-link {
+                display: none;
+            }
+
+            .container {
+                display: block;
+                margin: 0;
+            }
+
+            .panel {
+                page-break-inside: avoid;
+                border: 1px solid #ccc;
+                margin-bottom: 20px;
+                min-height: auto;
+            }
+
+            .panel__content {
+                position: relative;
+                opacity: 1;
+                transform: none;
+                padding: 20px;
+            }
+
+            .panel__title {
+                position: relative;
+                transform: none;
+                opacity: 1;
+                padding: 10px;
+                border-bottom: 2px solid #333;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Top Navigation -->
-    <nav class="top-nav">
+    <nav class="top-nav" role="navigation" aria-label="Main navigation">
         <ul class="nav-links">
-            <li><a onclick="openPanel('contact')">Contact</a></li>
-            <li><a onclick="openPanel('main')">Home</a></li>
-            <li><a onclick="openPanel('section1')">Section 1</a></li>
-            <li><a onclick="openPanel('section2')">Section 2</a></li>
-            <li><a onclick="openPanel('section3')">Section 3</a></li>
-            <li><a onclick="openPanel('cvs')">CVs</a></li>
+            <li><button onclick="openPanel('contact')" aria-label="Navigate to Contact section">Contact</button></li>
+            <li><button onclick="openPanel('main')" aria-label="Navigate to Home section">Home</button></li>
+            <li><button onclick="openPanel('section1')" aria-label="Navigate to Section 1">Section 1</button></li>
+            <li><button onclick="openPanel('section2')" aria-label="Navigate to Section 2">Section 2</button></li>
+            <li><button onclick="openPanel('section3')" aria-label="Navigate to Section 3">Section 3</button></li>
+            <li><button onclick="openPanel('cvs')" aria-label="Navigate to CVs section">CVs</button></li>
         </ul>
     </nav>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="alert" aria-live="polite">
+        <span class="toast__icon" id="toast-icon">✓</span>
+        <div class="toast__content">
+            <div class="toast__title" id="toast-title">Success</div>
+            <div class="toast__message" id="toast-message">Message sent successfully</div>
+        </div>
+        <button class="toast__close" onclick="hideToast()" aria-label="Close notification">×</button>
+    </div>
+
     <!-- Main Container with Panels -->
-    <div class="container">
+    <main class="container" id="main-content" role="main">
         <!-- Contact Panel -->
-        <div class="panel contact" id="contact" onclick="openPanel('contact')">
-            <div class="panel-title">Contact</div>
-            <div class="panel-content">
+        <section class="panel panel--contact" id="contact" onclick="openPanel('contact')" role="button" tabindex="0" aria-label="Contact section">
+            <h2 class="panel__title">Contact</h2>
+            <div class="panel__content">
                 <h1>Get In Touch</h1>
                 <p>Have a question or want to work together? Feel free to reach out!</p>
                 
-                <form class="contact-form" onsubmit="handleSubmit(event)">
+                <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" placeholder="Your name" required>
+                        <label for="contact-name">Name</label>
+                        <input type="text" id="contact-name" name="name" placeholder="Your name" required aria-required="true">
+                        <span class="error-message">Please enter your name</span>
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="your.email@example.com" required>
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" name="email" placeholder="your.email@example.com" required aria-required="true">
+                        <span class="error-message">Please enter a valid email address</span>
                     </div>
                     <div class="form-group">
-                        <label>Message</label>
-                        <textarea placeholder="Your message..." required></textarea>
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" name="message" placeholder="Your message..." required aria-required="true" maxlength="1000"></textarea>
+                        <span class="error-message">Please enter your message</span>
                     </div>
-                    <button type="submit">Send Message</button>
+                    <button type="submit" class="btn-primary" id="submit-btn">
+                        <span id="btn-text">Send Message</span>
+                    </button>
                 </form>
             </div>
-        </div>
+        </section>
 
         <!-- Main Panel -->
-        <div class="panel main active" id="main" onclick="openPanel('main')">
-            <div class="panel-title">Home</div>
-            <div class="panel-content">
+        <section class="panel panel--main panel--active" id="main" onclick="openPanel('main')" role="button" tabindex="0" aria-label="Home section">
+            <h2 class="panel__title">Home</h2>
+            <div class="panel__content">
                 <h1>Welcome to Our Project</h1>
                 <p>This is a collaborative project showcasing our work and expertise. Navigate through different sections to learn more about what we do and who we are.</p>
                 
@@ -451,19 +789,19 @@
                 <p>This website demonstrates our technical skills and project capabilities. Each section contains detailed information about different aspects of our work.</p>
                 
                 <h2>Quick Navigation</h2>
-                <p>Use the top navigation bar or hover over the vertical panels to explore different sections. Click on any panel to expand it and view its full content.</p>
+                <p>Use the top navigation bar or click on the vertical panels to explore different sections. On mobile devices, tap any panel to expand it and view its full content.</p>
                 
                 <h2>What You'll Find Here</h2>
                 <p><strong>Contact:</strong> Reach out to us through our contact form</p>
                 <p><strong>Sections 1-3:</strong> Detailed information about different project units</p>
                 <p><strong>CVs:</strong> Professional profiles of our team members</p>
             </div>
-        </div>
+        </section>
 
         <!-- Section 1 Panel -->
-        <div class="panel section1" id="section1" onclick="openPanel('section1')">
-            <div class="panel-title">Section 1</div>
-            <div class="panel-content">
+        <section class="panel panel--section1" id="section1" onclick="openPanel('section1')" role="button" tabindex="0" aria-label="Section 1">
+            <h2 class="panel__title">Section 1</h2>
+            <div class="panel__content">
                 <h1>Section 1</h1>
                 <p>This is the first content unit of our project.</p>
                 
@@ -478,12 +816,12 @@
                 <h2>Technical Details</h2>
                 <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
-        </div>
+        </section>
 
         <!-- Section 2 Panel -->
-        <div class="panel section2" id="section2" onclick="openPanel('section2')">
-            <div class="panel-title">Section 2</div>
-            <div class="panel-content">
+        <section class="panel panel--section2" id="section2" onclick="openPanel('section2')" role="button" tabindex="0" aria-label="Section 2">
+            <h2 class="panel__title">Section 2</h2>
+            <div class="panel__content">
                 <h1>Section 2</h1>
                 <p>This is the second content unit of our project.</p>
                 
@@ -498,12 +836,12 @@
                 <h2>Implementation</h2>
                 <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
             </div>
-        </div>
+        </section>
 
         <!-- Section 3 Panel -->
-        <div class="panel section3" id="section3" onclick="openPanel('section3')">
-            <div class="panel-title">Section 3</div>
-            <div class="panel-content">
+        <section class="panel panel--section3" id="section3" onclick="openPanel('section3')" role="button" tabindex="0" aria-label="Section 3">
+            <h2 class="panel__title">Section 3</h2>
+            <div class="panel__content">
                 <h1>Section 3</h1>
                 <p>This is the third content unit of our project.</p>
                 
@@ -518,15 +856,15 @@
                 <h2>Results</h2>
                 <p>Sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est.</p>
             </div>
-        </div>
+        </section>
 
         <!-- CVs Panel -->
-        <div class="panel cvs" id="cvs" onclick="openPanel('cvs')">
-            <div class="panel-title">CVs</div>
-            <div class="panel-content">
+        <section class="panel panel--cvs" id="cvs" onclick="openPanel('cvs')" role="button" tabindex="0" aria-label="CVs section">
+            <h2 class="panel__title">CVs</h2>
+            <div class="panel__content">
                 <h1>Our Team</h1>
                 
-                <div class="cv-card">
+                <article class="cv-card">
                     <h2>Team Member 1</h2>
                     <div class="cv-section">
                         <h3>Professional Summary</h3>
@@ -547,9 +885,9 @@
                         <h3>Education</h3>
                         <p><strong>Computer Science Degree</strong> - University Name</p>
                     </div>
-                </div>
+                </article>
 
-                <div class="cv-card">
+                <article class="cv-card">
                     <h2>Team Member 2</h2>
                     <div class="cv-section">
                         <h3>Professional Summary</h3>
@@ -570,75 +908,230 @@
                         <h3>Education</h3>
                         <p><strong>Software Engineering Degree</strong> - University Name</p>
                     </div>
-                </div>
+                </article>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer>
+    <footer role="contentinfo">
         <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">GitHub</a>
-            <a href="#">LinkedIn</a>
-            <a href="#">Twitter</a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
         </div>
         <div class="footer-info">
-            © 2025 Project Team. All rights reserved.
+            &copy; 2025 Project Team. All rights reserved.
         </div>
     </footer>
 
     <script>
+        // State management
+        const AppState = {
+            activePanel: 'main',
+            isSubmitting: false
+        };
+
+        /**
+         * Opens a specific panel and closes others
+         * @param {string} panelId - The ID of the panel to open
+         */
         function openPanel(panelId) {
+            if (AppState.activePanel === panelId) {
+                return; // Already active, do nothing
+            }
+
             // Remove active class from all panels
             document.querySelectorAll('.panel').forEach(panel => {
-                panel.classList.remove('active');
+                panel.classList.remove('panel--active');
             });
             
             // Add active class to clicked panel
-            document.getElementById(panelId).classList.add('active');
+            const targetPanel = document.getElementById(panelId);
+            if (targetPanel) {
+                targetPanel.classList.add('panel--active');
+                AppState.activePanel = panelId;
+                
+                // Focus management for accessibility
+                const content = targetPanel.querySelector('.panel__content');
+                if (content) {
+                    content.setAttribute('tabindex', '-1');
+                    content.focus();
+                }
+            }
         }
 
-        function handleSubmit(event) {
+        /**
+         * Shows a toast notification
+         * @param {string} type - 'success' or 'error'
+         * @param {string} title - Toast title
+         * @param {string} message - Toast message
+         */
+        function showToast(type, title, message) {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+
+            // Set content
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Set icon based on type
+            toastIcon.textContent = type === 'success' ? '✓' : '✕';
+            
+            // Reset classes
+            toast.className = 'toast';
+            
+            // Add type-specific class
+            if (type === 'error') {
+                toast.classList.add('toast--error');
+            } else {
+                toast.classList.add('toast--success');
+            }
+            
+            // Show toast
+            toast.classList.add('toast--show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideToast();
+            }, 5000);
+        }
+
+        /**
+         * Hides the toast notification
+         */
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('toast--show');
+        }
+
+        /**
+         * Validates email format
+         * @param {string} email - Email to validate
+         * @returns {boolean} - True if valid
+         */
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        /**
+         * Validates the contact form
+         * @param {HTMLFormElement} form - The form to validate
+         * @returns {boolean} - True if form is valid
+         */
+        function validateForm(form) {
+            let isValid = true;
+            const formGroups = form.querySelectorAll('.form-group');
+            
+            formGroups.forEach(group => {
+                group.classList.remove('error');
+                const input = group.querySelector('input, textarea');
+                
+                if (!input.value.trim()) {
+                    group.classList.add('error');
+                    isValid = false;
+                } else if (input.type === 'email' && !isValidEmail(input.value)) {
+                    group.classList.add('error');
+                    isValid = false;
+                }
+            });
+            
+            return isValid;
+        }
+
+        /**
+         * Handles form submission
+         * @param {Event} event - Submit event
+         */
+        async function handleSubmit(event) {
             event.preventDefault();
             
             const form = event.target;
+            
+            // Validate form
+            if (!validateForm(form)) {
+                showToast('error', 'Validation Error', 'Please fill in all fields correctly.');
+                return;
+            }
+            
+            // Prevent double submission
+            if (AppState.isSubmitting) {
+                return;
+            }
+            
+            AppState.isSubmitting = true;
+            
+            // Get form data using proper selectors
             const formData = {
-                name: form.elements[0].value,
-                email: form.elements[1].value,
-                message: form.elements[2].value
+                name: form.querySelector('[name="name"]').value,
+                email: form.querySelector('[name="email"]').value,
+                message: form.querySelector('[name="message"]').value
             };
             
             const scriptURL = 'https://script.google.com/macros/s/AKfycbz1Lcm_36oowy55AJwtyZPdaPWx5d-dwIBOR6KWi0PpQ8oNLGRs4h92seTdK7k9uJt1/exec';
             
-            // Show loading state
-            const submitBtn = form.querySelector('button');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
+            // Update button to show loading state
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const originalText = btnText.textContent;
+            
+            btnText.innerHTML = '<span class="spinner"></span> Sending...';
             submitBtn.disabled = true;
             
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => {
-                alert('Thank you for your message! We will get back to you soon.');
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                // Since we're using no-cors, we can't read the response
+                // Assume success if no error was thrown
+                showToast('success', 'Message Sent!', 'Thank you for your message. We will get back to you soon.');
                 form.reset();
-                submitBtn.textContent = originalText;
+                
+                // Remove any error states
+                form.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error');
+                });
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showToast('error', 'Submission Failed', 'There was an error sending your message. Please try again.');
+            } finally {
+                // Reset button state
+                btnText.textContent = originalText;
                 submitBtn.disabled = false;
-            })
-            .catch(error => {
-                alert('Thank you for your message! We will get back to you soon.');
-                form.reset();
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
+                AppState.isSubmitting = false;
+            }
         }
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(event) {
+            // Enter or Space on panels
+            if ((event.key === 'Enter' || event.key === ' ') && event.target.classList.contains('panel')) {
+                event.preventDefault();
+                openPanel(event.target.id);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Portfolio loaded successfully');
+            
+            // Add event listeners to panels (as fallback to inline onclick)
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.addEventListener('click', function() {
+                    openPanel(this.id);
+                });
+            });
+        });
     </script>
 </body>
 </html>
