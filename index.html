@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio project with CRUD functionality">
-    <title>Portfolio Project - With CRUD</title>
+    <meta name="description" content="Project Page">
+    <title>Project Almojabana</title>
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -288,10 +288,10 @@
 
         .panel--contact { background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); }
         .panel--main { background: linear-gradient(180deg, #0f3460 0%, #16213e 100%); }
-        .panel--section1 { background: linear-gradient(180deg, #533483 0%, #2d1b4e 100%); }
-        .panel--section2 { background: linear-gradient(180deg, #1e3a5f 0%, #2d1b4e 100%); }
-        .panel--section3 { background: linear-gradient(180deg, #2c5f2d 0%, #1b3a1b 100%); }
-        .panel--cvs { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 100%); }
+        .panel--unit1 { background: linear-gradient(180deg, #533483 0%, #2d1b4e 100%); }
+        .panel--unit2 { background: linear-gradient(180deg, #1e3a5f 0%, #2d1b4e 100%); }
+        .panel--unit3 { background: linear-gradient(180deg, #2c5f2d 0%, #1b3a1b 100%); }
+        .panel--Portfolio { background: linear-gradient(180deg, #8e44ad 0%, #5b2c6f 100%); }
         .panel--admin { background: linear-gradient(180deg, #1a1a2e 0%, #2d1b4e 100%); }
 
         /* ==========================================================================
@@ -580,9 +580,9 @@
         }
 
         /* ==========================================================================
-           CV CARD STYLES
+           portfolio CARD STYLES
            ========================================================================== */
-        .cv-card {
+        .portfolio-card {
             background: var(--color-bg-overlay);
             padding: 25px;
             border-radius: 10px;
@@ -591,12 +591,12 @@
             transition: transform var(--transition-fast);
         }
 
-        .cv-card:hover {
+        .portfolio-card:hover {
             transform: translateY(-2px);
             border-color: rgba(74, 158, 255, 0.3);
         }
 
-        .cv-section {
+        .portfolio-section {
             margin-bottom: 20px;
         }
 
@@ -917,10 +917,10 @@
         <ul class="nav-links">
             <li><button onclick="openPanel('contact')" aria-label="Navigate to Contact section">Contact</button></li>
             <li><button onclick="openPanel('main')" aria-label="Navigate to Home section">Home</button></li>
-            <li><button onclick="openPanel('section1')" aria-label="Navigate to Section 1">Section 1</button></li>
-            <li><button onclick="openPanel('section2')" aria-label="Navigate to Section 2">Section 2</button></li>
-            <li><button onclick="openPanel('section3')" aria-label="Navigate to Section 3">Section 3</button></li>
-            <li><button onclick="openPanel('cvs')" aria-label="Navigate to CVs section">CVs</button></li>
+            <li><button onclick="openPanel('unit1')" aria-label="Navigate to Unit 1">Unit 1</button></li>
+            <li><button onclick="openPanel('unit2')" aria-label="Navigate to Unit 2">Unit 2</button></li>
+            <li><button onclick="openPanel('unit3')" aria-label="Navigate to Unit 3">Unit 3</button></li>
+            <li><button onclick="openPanel('Portfolio')" aria-label="Navigate to Portfolio section">Portfolio</button></li>
             <li><button onclick="openPanel('admin')" aria-label="Navigate to Admin section">Admin</button></li>
         </ul>
         <div class="nav-auth" id="nav-auth" style="display: none;">
@@ -993,15 +993,15 @@
                 <p><strong>Contact:</strong> Submit messages that are stored in Firebase</p>
                 <p><strong>Admin:</strong> Login to view, edit, and delete contact messages</p>
                 <p><strong>Sections 1-3:</strong> Detailed information about different project units</p>
-                <p><strong>CVs:</strong> Professional profiles of our team members</p>
+                <p><strong>Portfolio:</strong> Professional profiles of our team members</p>
             </div>
         </section>
 
-        <!-- Section 1 Panel -->
-        <section class="panel panel--section1" id="section1" onclick="openPanel('section1')" role="button" tabindex="0" aria-label="Section 1">
-            <h2 class="panel__title">Section 1</h2>
+        <!-- Unit 1 Panel -->
+        <section class="panel panel--unit1" id="unit1" onclick="openPanel('unit1')" role="button" tabindex="0" aria-label="Unit 1">
+            <h2 class="panel__title">Unit 1</h2>
             <div class="panel__content">
-                <h1>Section 1</h1>
+                <h1>Unit 1</h1>
                 <p>This is the first content unit of our project.</p>
                 
                 <h2>Overview</h2>
@@ -1017,11 +1017,11 @@
             </div>
         </section>
 
-        <!-- Section 2 Panel -->
-        <section class="panel panel--section2" id="section2" onclick="openPanel('section2')" role="button" tabindex="0" aria-label="Section 2">
-            <h2 class="panel__title">Section 2</h2>
+        <!-- Unit 2 Panel -->
+        <section class="panel panel--unit2" id="unit2" onclick="openPanel('unit2')" role="button" tabindex="0" aria-label="Unit 2">
+            <h2 class="panel__title">Unit 2</h2>
             <div class="panel__content">
-                <h1>Section 2</h1>
+                <h1>Unit 2</h1>
                 <p>This is the second content unit of our project.</p>
                 
                 <h2>Description</h2>
@@ -1037,11 +1037,11 @@
             </div>
         </section>
 
-        <!-- Section 3 Panel -->
-        <section class="panel panel--section3" id="section3" onclick="openPanel('section3')" role="button" tabindex="0" aria-label="Section 3">
-            <h2 class="panel__title">Section 3</h2>
+        <!-- Unit 3 Panel -->
+        <section class="panel panel--unit3" id="unit3" onclick="openPanel('unit3')" role="button" tabindex="0" aria-label="Unit 3">
+            <h2 class="panel__title">Unit 3</h2>
             <div class="panel__content">
-                <h1>Section 3</h1>
+                <h1>Unit 3</h1>
                 <p>This is the third content unit of our project.</p>
                 
                 <h2>Introduction</h2>
@@ -1057,53 +1057,53 @@
             </div>
         </section>
 
-        <!-- CVs Panel -->
-        <section class="panel panel--cvs" id="cvs" onclick="openPanel('cvs')" role="button" tabindex="0" aria-label="CVs section">
-            <h2 class="panel__title">CVs</h2>
+        <!-- Portfolio Panel -->
+        <section class="panel panel--Portfolio" id="Portfolio" onclick="openPanel('Portfolio')" role="button" tabindex="0" aria-label="Portfolio section">
+            <h2 class="panel__title">Portfolio</h2>
             <div class="panel__content">
                 <h1>Our Team</h1>
                 
-                <article class="cv-card">
+                <article class="portfolio-card">
                     <h2>Team Member 1</h2>
-                    <div class="cv-section">
+                    <div class="port-section">
                         <h3>Professional Summary</h3>
                         <p>Experienced developer with expertise in web technologies and project management. Passionate about creating intuitive and efficient solutions.</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Skills</h3>
                         <p><strong>Technical:</strong> HTML, CSS, JavaScript, React, Node.js, Python</p>
                         <p><strong>Design:</strong> UI/UX, Responsive Design, Accessibility</p>
                         <p><strong>Tools:</strong> Git, VS Code, Figma, Adobe Creative Suite</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Experience</h3>
                         <p><strong>Senior Developer</strong> - Company Name (2020-Present)</p>
                         <p>Leading development of web applications and mentoring junior developers.</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Education</h3>
                         <p><strong>Computer Science Degree</strong> - University Name</p>
                     </div>
                 </article>
 
-                <article class="cv-card">
+                <article class="portfolio-card">
                     <h2>Team Member 2</h2>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Professional Summary</h3>
                         <p>Creative problem solver with strong technical background and dedication to delivering high-quality results. Focused on innovative solutions and user experience.</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Skills</h3>
                         <p><strong>Technical:</strong> JavaScript, TypeScript, Vue.js, Angular, SQL</p>
                         <p><strong>Design:</strong> Wireframing, Prototyping, User Research</p>
                         <p><strong>Tools:</strong> Docker, Jenkins, Jira, Sketch</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Experience</h3>
                         <p><strong>Full Stack Developer</strong> - Tech Company (2019-Present)</p>
                         <p>Building scalable applications and implementing best practices.</p>
                     </div>
-                    <div class="cv-section">
+                    <div class="portfolio-section">
                         <h3>Education</h3>
                         <p><strong>Software Engineering Degree</strong> - University Name</p>
                     </div>
@@ -1707,3 +1707,4 @@
     </script>
 </body>
 </html>
+
